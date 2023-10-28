@@ -1,6 +1,4 @@
 import { Controller, Delete, Get, Param, Post, Put, Body, ParseIntPipe, ValidationPipe, NotFoundException } from '@nestjs/common';
-import { CreateBooksDto } from './dto/create-books.dto';
-import { UpdateBooksDto } from './dto/update-books-dto';
 import { BooksService } from './books.service';
 import { Book } from './books.model';
 
@@ -12,20 +10,6 @@ export class BooksController {
   findAll(): Promise<Book[]> {
     return this.bookService.findAll();
   }
-
-  // @Post()
-  // async createBook(
-  //   @Body('title') title: string,
-  //   @Body('author') author: string,
-  //   @Body('price') price: number
-  // ){
-  //   const generatedId = await this.bookService.create(
-  //     title,
-  //     author,
-  //     price
-  //   )
-  //   return { id: generatedId }
-  // }
 
   @Post()
   create(@Body() createBookDto: any): Promise<Book> {
@@ -47,8 +31,10 @@ export class BooksController {
     });
   }
 
-  // @Delete(':bookId')
-  // deleteBook(@Param('bookId', ParseIntPipe) bookId: number) {
-  //   return this.bookService.remove(bookId);
-  // }
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<void> {
+    return this.bookService.remove(id).catch((error) => {
+      throw new NotFoundException(error.message);
+    });
+  }
 }
